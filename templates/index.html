@@ -1,14 +1,113 @@
 {% extends 'base.html' %}
+<h1 class="text-xl font-semibold">Home Page</h1>
+{% block title %}g14_project{% endblock %}
 
-{% block title %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon_site.png') }}">  
 {% endblock %}
 
 {% block content %}
+<div class="relative w-full min-h-screen overflow-hidden bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900">
 
-    <div class="dados">
-        <br><br>
-            <h1>Flask demo PCII</h1>
+    <!-- Camada de Escurecimento -->
+    <div class="absolute inset-0 bg-black opacity-30 z-0"></div>
+
+    <!-- Container Principal -->
+    <div class="relative z-10 flex flex-col items-center justify-start min-h-screen pt-20 px-6 md:px-16">
+
+        <!-- Título -->
+        <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-12 animate__animated animate__fadeInDown">
+            Event Management
+        </h1>
+
+        <!-- Cartas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-7xl animate__animated animate__fadeInUp animate__delay-1s">
+
+            {% set events = [
+                {'img': 'https://onossocasamento.pt/sites/onossocasamento.pt/files/styles/onc2019_blog_imagem/public/artigos/pexels-photo-1804684.jpeg?itok=GnoXYymC', 'label': 'Wedding Events', 'desc': 'Make your wedding unforgettable with our professional event management.'},
+                {'img': 'https://teleseventos.pt/wp-content/uploads/2021/10/Sunset-Dj.jpg', 'label': 'Sunset Parties', 'desc': 'Enjoy perfect sunset parties with the best DJs and vibes.'},
+                {'img': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBGqvdw3oW1eVLNEN6P82_r-a6vQAFwtUgpg&s', 'label': 'Corporate Events', 'desc': 'Professional corporate event planning tailored for your company.'},
+                {'img': 'https://static.wixstatic.com/media/a27d24_6607d903aa8c48ac9bfa8094e00c48b0~mv2.jpg/v1/fill/w_640,h_427,al_c,q_80,enc_avif,quality_auto/a27d24_6607d903aa8c48ac9bfa8094e00c48b0~mv2.jpg', 'label': 'Private Events', 'desc': 'Private parties customized to your dreams.'},
+                {'img': 'https://www.nit.pt/wp-content/uploads/2024/08/9a82653b84182085b97d87c7917d1742-754x394.jpg', 'label': 'Color Parties', 'desc': 'Vibrant events where colored powder, music and dance mix, creating unique moments of joy and celebration outdoors.'},
+                {'img': 'https://billetto.co.uk/blog/wp-content/uploads/2019/10/aditya-chinchure-ZhQCZjr9fHo-unsplash-1024x768.jpg', 'label': 'Concerts & Festivals', 'desc': 'Massive concerts and festivals managed from A to Z.'}
+            ] %}
+
+            {% for event in events %}
+            <div class="relative group overflow-hidden rounded-xl shadow-2xl transform hover:scale-105 hover:rotate-1 transition-all duration-500 cursor-pointer" onclick="openCard('{{ event.label }}', '{{ event.desc }}')">
+                <img src="{{ event.img }}" alt="{{ event.label }}" class="w-full h-72 object-cover brightness-75 group-hover:brightness-100 transition-all duration-500">
+                <div class="absolute inset-0 flex justify-center items-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                    <span class="text-white text-2xl font-bold">{{ event.label }}</span>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
     </div>
     
+    <!-- Secção Extra: Frase motivacional dinâmica -->
+    <div class="h-[50vh] flex flex-col items-center justify-center px-6 text-center bg-black bg-opacity-40 backdrop-blur-md text-white rounded-t-3xl shadow-inner space-y-4 relative z-10">
+
+
+
+        <div class="text-5xl">🎉</div>
+
+        <h2 class="text-2xl font-semibold">
+            You've discovered <span class="text-indigo-600 dark:text-indigo-400">{{ events|length }}</span> amazing event types!
+        </h2>
+
+        <p id="motivation-text" class="text-md italic text-white max-w-xl"
+            “Great events don’t just happen — they are planned.”<br>
+            Keep building memories, one event at a time.
+        </p>
+
+        <!-- Botão para gerar nova motivação -->
+        <button onclick="generateNewQuote()" class="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition hover:scale-105 z-20 relative">
+            🎲 Nova motivação
+        </button>
+    </div>
+
+    <!-- Script para trocar frase motivacional -->
+    <script>
+        const quotes = [
+            "“An event is not over until everyone stops talking about it.”",
+            "“The best events are the ones where everyone feels seen.”",
+            "“Details matter. It’s the small things that make events unforgettable.”",
+            "“Behind every great event is a team that never gave up.”",
+            "“Make it simple, but significant.”",
+            "“Moments create memories. Plan wisely.”",
+            "“Big impact starts with a great plan.”",
+            "“Turn your vision into experiences.”",
+            "“People will forget what you said, but not how the event made them feel.”"
+        ];
+
+        function generateNewQuote() {
+            const quoteElement = document.getElementById("motivation-text");
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            quoteElement.textContent = quotes[randomIndex];
+        }
+    </script>
+
+    <!-- Cartinha/Popup -->
+    <div id="card-popup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-2xl max-w-md w-full text-center relative animate__animated animate__zoomIn">
+            <button onclick="closeCard()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold">&times;</button>
+            <h2 id="card-title" class="text-3xl font-bold text-gray-800 dark:text-white mb-4"></h2>
+            <p id="card-desc" class="text-gray-600 dark:text-gray-300"></p>
+        </div>
+    </div>
+
+    <script>
+        function openCard(title, desc) {
+            document.getElementById('card-title').textContent = title;
+            document.getElementById('card-desc').textContent = desc;
+            document.getElementById('card-popup').classList.remove('hidden');
+        }
+
+        function closeCard() {
+            document.getElementById('card-popup').classList.add('hidden');
+        }
+    </script>
+
 {% endblock %}

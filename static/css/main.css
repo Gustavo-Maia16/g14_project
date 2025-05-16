@@ -1,85 +1,259 @@
-body{
+/* Reset básico */
+body {
     margin: 0;
     min-height: 300px;
 }
 
-nav{
+/* Navegação */
+nav {
     width: 100%;
     float: left;
 }
 
-.menu{
+.menu {
     margin: 0;
     padding: 8px;
     height: 100%;
     background-color: #334a94;
-
 }
 
-.menu li{
+.menu li {
     display: inline;
 }
 
-.button{
-    font-family: Arial;
+/* Botões gerais */
+.button {
+    font-family: Arial, sans-serif;
     font-size: 1em;
-    font-style: none;
     color: #ffffff;
     padding: 8px;
     text-decoration: none;
-}
-
-.button:link{
     background-color: #334a94;
-    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.button:hover{
+.button:hover {
     background-color: lightblue;
 }
 
-.dados{
-        text-align: center;
-        font-size: 1em;
+.button:disabled {
+    background-color: lightgray;
+    cursor: not-allowed;
 }
 
-.button1{
-    font-family: Arial;
+/* Botões personalizados */
+.button1 {
+    font-family: Arial, sans-serif;
     background-color: #334a94;
     font-size: 1em;
-    font-style: none;
     color: white;
     padding: 4px;
-    border-radius: 5px}
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.button1:link{
-    background-color: #334a94;
-    color: #ffffff;
-}
-
-.button1:hover{
+.button1:hover {
     background-color: lightblue;
 }
 
-.button1:disabled{
+.button1:disabled {
     background-color: lightgray;
+    cursor: not-allowed;
 }
 
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 50%;
-  margin-left: auto; 
-  margin-right: auto;
+/* Botões com classes utilitárias */
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
+.btn-primary {
+    background-color: #4f46e5; /* Indigo-600 */
 }
 
-tr:nth-child(even) {
-  background-color: #dddddd;
+.btn-primary:hover {
+    background-color: #4338ca;
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
 }
+
+.btn-secondary {
+    background-color: #6b7280; /* Gray-500 */
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(107, 114, 128, 0.4);
+}
+
+.btn-success {
+    background-color: #10b981; /* Green-500 */
+}
+
+.btn-success:hover {
+    background-color: #059669;
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+
+.btn-danger {
+    background-color: #ef4444; /* Red-500 */
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+}
+
+.btn-warning {
+    background-color: #f59e0b; /* Amber-500 */
+}
+
+.btn-warning:hover {
+    background-color: #d97706;
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+}
+
+.btn-save {
+    background-color: #3b82f6; /* Blue-500 */
+}
+
+.btn-save:hover {
+    background-color: #2563eb;
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+}
+
+
+/* Inputs */
+.form-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db; /* Gray-300 */
+    border-radius: 8px;
+    background-color: #f9fafb; /* Gray-50 */
+    color: #111827; /* Gray-900 */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input:focus {
+    border-color: #4f46e5; /* Indigo-600 */
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+    outline: none;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151; /* Gray-700 */
+}
+
+/* Modal */
+#modal {
+    animation: fadeIn 0.3s ease-out;
+}
+
+#modal .bg-white {
+    background-color: #ffffff;
+}
+
+#modal .dark\\:bg-gray-800 {
+    background-color: #1f2937;
+}
+
+/* Animação */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Campos editáveis */
+.editable-field {
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.5rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.editable-field:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+    outline: none;
+}
+
+/* Imagem perfil */
+img.rounded-full {
+    border: 4px solid #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+img.rounded-full:hover {
+    border-color: #6366f1; /* Indigo-500 */
+}
+
+/* Geral */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.botao:disabled:hover {
+    background-color: #ccc; /* cor de fundo quando desabilitado */
+    color: #666; /* cor do texto quando desabilitado */
+    cursor: not-allowed; /* cursor de "não permitido" */
+    border: 1px solid #ccc; /* borda quando desabilitado */
+}
+
+.botao:hover {
+    background-color: #337ab7; /* cor de fundo quando habilitado */
+    color: #fff; /* cor do texto quando habilitado */
+    border: 1px solid #337ab7; /* borda quando habilitado */
+}
+
+/* Bloqueia seleção e cursor de texto para todo o site */
+* {
+    user-select: none; /* Impede a seleção de texto */
+    cursor: default; /* Cursor padrão */
+}
+
+/* Permite seleção e cursor de texto apenas nos inputs, textareas e elementos com contenteditable ou class 'editable-field' */
+input, textarea, [contenteditable="true"], .editable-field {
+    user-select: text; /* Permite selecionar texto dentro desses elementos */
+    cursor: text; /* Cursor de texto (I-beam) */
+}
+
+/* Botões desabilitados (estética melhorada) */
+.btn:disabled,
+.btn-disabled,
+.btn-disabled:hover {
+    background: linear-gradient(to right, #d1d5db, #e5e7eb); /* gradiente subtil */
+    color: #9ca3af; /* cinza mais escuro para o texto */
+    border: 1px solid #cbd5e1; /* borda leve */
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none !important;
+    opacity: 0.8;
+    transition: none;
+}
+
+

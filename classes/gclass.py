@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
 """
 @author: António Brito / Carlos Bragança
-(2022)
-#objective: Generic class
-
+(2025) objective: Generic class
 """""
 # Generic Class
 import sys
@@ -30,10 +27,21 @@ class Gclass:
         cls.obj = dict()
         cls.lst = list()
         cls.pos = 0
-    # Class method to return the primary key related lines
+    # Object identifier auto increment
     @classmethod
-    def getlines(cls, firstkey):
-        return list(filter(lambda x: x.startswith(firstkey),cls.lst))
+    def get_id(cls, id):
+        # Compute the auto increment
+        id = int(id)
+        if id == 0:
+            if len(cls.lst) == 0:
+                id = 1
+            else:
+                id = max(cls.lst) + 1
+        return id
+    # Class method to return the list of object id's having an attribute 'att' = 'value'
+    @classmethod
+    def getlines(cls, att, value):
+        return [obj.id for obj in list(cls.obj.values()) if getattr(obj, att) == value]
     # Class methods to iterate (forward and backward) through the class objects
     @classmethod
     def nextrec(cls):
@@ -68,16 +76,8 @@ class Gclass:
     @classmethod
     def remove(cls, p):
         obj = cls.obj[p]
-        if cls.nkey == 1:
-            code = cls.att[0][1:]
-            command = f'DELETE FROM {cls.__name__} WHERE {code}={cls.conv(obj,code,p)}'
-        elif cls.nkey == 2:
-            code1 = cls.att[0][1:]
-            code2 = cls.att[1][1:]
-            value1 = getattr(obj, code1)
-            value2 = getattr(obj, code2)
-            command = f'DELETE FROM {cls.__name__} WHERE {code1}={cls.conv(obj, code1, value1)}'
-            command = command + f' AND {code2}={cls.conv(obj, code2, value2)}'
+        id = cls.att[0][1:]
+        command = f'DELETE FROM {cls.__name__} WHERE {id}={cls.conv(obj,id,p)}'
         cls.sqlexe(command)
         cls.lst.remove(p)
         del cls.obj[p]
@@ -96,19 +96,12 @@ class Gclass:
     def update(cls, p):
         obj = cls.obj[p]
         command = f'UPDATE "{cls.__name__}" SET'
-        for att in cls.att:
+        for att in cls.att[1:]:
             value = getattr(obj, att)
             command += f' {att[1:]} = {cls.conv(obj, att, value)},'
-        if cls.nkey == 1:
-            code = cls.att[0][1:]
-            command = command[:-1] + f' WHERE {code} = {cls.conv(obj, code, p)}'
-        elif cls.nkey == 2:
-            code1 = cls.att[0][1:]
-            code2 = cls.att[1][1:]
-            value1 = getattr(obj, code1)
-            value2 = getattr(obj, code2)
-            command = command[:-1] + f' WHERE {code1} = {cls.conv(obj, code1, value1)}'
-            command = command + f' AND {code2}={cls.conv(obj, code2, value2)}'
+        id = cls.att[0][1:]
+        command = command[:-1] + f' WHERE {id} = {cls.conv(obj, id, p)}'
+        print(command)
         cls.sqlexe(command)
     @staticmethod
     def conv(obj, att, value):
@@ -118,7 +111,6 @@ class Gclass:
         else:
             ret = f'{value}'
         return ret
-
     # Sort objects by attribute class methods
     @classmethod
     def orderfunc(cls, e):
@@ -155,11 +147,7 @@ class Gclass:
     @classmethod
     def getatlist(cls, att):
         return [getattr(obj, att) for obj in list(cls.obj.values())]
-    # Write object to csv file
-    @classmethod
-    def write(cls, path = ''):
-        pass
-        # Read objects from csv file
+    # Read objects from db file
     @classmethod
     def read(cls, path = ''):
         cls.obj = dict()
@@ -168,7 +156,6 @@ class Gclass:
         try:
             fh = open(path, 'r')
             fh.close()
-
             lista = cls.sqlexe("select * from " + cls.__name__)
             if lista != None:
                 for r in lista:

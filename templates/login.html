@@ -1,24 +1,113 @@
 {% extends 'base.html' %}
+{% block page_title %}Login{% endblock %}
 
-{% block title %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<title>{% block title %}Login{% endblock %}</title>
+<link rel="website icon" type="png" href="static/images/icon_site.png">
 {% endblock %}
 
+
 {% block content %}
-    <div class = "dados">
-        <br><br>
-        <h1>Login</h1>
-        <br>
+    <style>
+        /* Bloqueia seleção e cursor de texto para todo o site */
+        * {
+            user-select: none; /* Impede a seleção de texto */
+            cursor: default;   /* Cursor de seta normal */
+        }
+
+        /* Permite seleção e cursor de texto apenas nos inputs e textareas */
+        input, textarea, [contenteditable="true"] {
+            user-select: text;  /* Permite selecionar texto dentro desses elementos */
+            cursor: text;       /* Cursor de texto (I-beam) */
+        }
+
+        /* Estilo para o campo de senha com ícone do olho */
+        .password-container {
+            position: relative;
+        }
+
+        .password-container input {
+            padding-right: 40px; /* Espaço para o ícone do olho */
+        }
+
+        .password-container button {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+
+<div class="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 dark:from-gray-900 dark:to-gray-800 transition-all duration-500">
+
+    <!-- Card de login -->
+    <div id="login-card" class="bg-white dark:bg-gray-800 text-center rounded-xl shadow-2xl p-8 w-full max-w-md transform transition-all duration-700 scale-100 opacity-100">
+        
+        <!-- Título do login -->
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-6">
+            Login to Your Account
+        </h1>
+
+        <!-- Formulário de login -->
         <form id="form" action="/chklogin" method="post">
-            <label for="user">User:</label>
-            <input type="text" id="user" name="user"  value = "{{user}}" size="30"/>
-            <br><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" value = "{{password}}" size="30"/>
-            <br><br>
-            <button type="submit" class="button1">Login</button>
+            <!-- Input para Usuário -->
+            <div class="mb-6">
+                <label for="user" class="block text-lg text-gray-900 dark:text-white mb-2">Username</label>
+                <input type="text" id="user" name="user" value="{{user}}" class="w-full py-2 px-4 rounded border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600" placeholder="Enter your username" required>
+            </div>
+
+            <!-- Input para Senha -->
+            <div class="mb-6 password-container">
+                <label for="password" class="block text-lg text-gray-900 dark:text-white mb-2">Password</label>
+                <div class="relative">
+                    <input type="password" id="password" name="password" value="{{password}}" 
+                           class="w-full py-2 px-4 pr-12 rounded border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600" 
+                           placeholder="Enter your password" required>
+                    <!-- Botão olho -->
+                    <button type="button" id="toggle-password">
+                        <i id="eye-icon" class="fas fa-eye text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-white"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Botão de login -->
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-full transition">
+                Login
+            </button>
+
+            <!-- Resultado de erro -->
+            {% if resul %}
+            <p class="text-red-500 text-sm mt-4">{{ resul }}</p>
+            {% endif %}
         </form>
-        <br><br>
-        <h3>{{resul}}</h3>
+
+        <!-- Link para recuperação de senha -->
+        <div class="mt-4">
+            <a href="#" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-500">Forgot your password?</a>
+        </div>
     </div>
+</div>
+
+<!-- Script para alternar a visibilidade da senha -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const togglePasswordButton = document.getElementById('toggle-password');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eye-icon');
+
+        let isPasswordVisible = false;
+
+        togglePasswordButton.addEventListener('click', () => {
+            isPasswordVisible = !isPasswordVisible;
+            passwordInput.type = isPasswordVisible ? 'text' : 'password';
+            eyeIcon.classList.toggle('fa-eye', !isPasswordVisible);  // Olho aberto
+            eyeIcon.classList.toggle('fa-eye-slash', isPasswordVisible);  // Olho fechado
+        });
+    });
+</script>
+
 {% endblock %}
