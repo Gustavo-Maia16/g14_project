@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block page_title %}Events{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<title>{% block title %}Events{% endblock %}</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon_site.png') }}">
+<style>
+    .btn-disabled, .btn-disabled:hover {
+        background-color: #9ca3af !important;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    .alert {
+        padding: 1em;
+        margin-bottom: 1em;
+        border-radius: 8px;
+    }
+    .alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .btn-exit {
+        background-color: #facc15;
+        color: black;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .btn-exit:hover {
+        background-color: #eab308;
+        transform: scale(1.05);
+        cursor: pointer;
+    } 
+    
+    .editable-field:not([readonly]) {
+    border: 2px solid black;
+    border-radius: 8px;
+    padding: 0.5rem;
+    transition: border 0.3s, box-shadow 0.3s;
+    }
+    
+    .editable-field:not([readonly]):focus{
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+    }
+    
+    
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-fit bg-gradient-to-br from-indigo-400 to-indigo-700 dark:from-gray-900 dark:to-gray-800 py-10 px-4 flex items-center justify-center transition-all duration-700">
+    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-2xl p-8 max-w-3xl w-full space-y-6 animate-fade-in">
+
+        <!-- Exibir a mensagem de erro, se houver -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                    <div class="alert alert-error">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="header text-center">
+            <img src="{{ url_for('static', filename='images/good-event-manager.jpg') }}" alt="Events" class="mx-auto w-42 h-42 rounded-full shadow-lg hover:scale-105 transition-all duration-300">
+            <h1 class="text-4xl font-bold text-gray-800 dark:text-white">Event Manager</h1>
+            <p class="text-gray-500 dark:text-gray-400">Manage your events easily and effectively.</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap gap-6 justify-center mt-8">
+            <button type="button" onclick="window.location.href='/Events?option=edit'" {{butshow}}
+                class="btn btn-primary text-lg font-bold px-6 py-3 hover:bg-indigo-600 hover:scale-110 transition-all duration-300 {% if not butshow %}btn-disabled{% endif %}"
+                >
+                ✏️ Edit
+            </button>
+            <button type="button" onclick="openModal('delete')" {{butshow}}
+                class="btn btn-danger text-lg font-bold px-6 py-3 hover:bg-red-600 hover:scale-110 transition-all duration-300 {% if not butshow %}btn-disabled{% endif %}"
+                >
+                🗑️ Delete
+            </button>
+            <button type="button" onclick="window.location.href='/Events?option=insert'" {{butshow}}
+                class="btn btn-success text-lg font-bold px-6 py-3 hover:bg-green-600 hover:scale-110 transition-all duration-300 {% if not butshow %}btn-disabled{% endif %}"
+                >
+                ➕ Insert
+            </button>
+        </div>	
+
+
+
+        <!-- Event Form -->
+        <form id="form" action="/Events?option=save" method="post" class="form-container space-y-6 mt-8">
+            <div class="section-card">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">ID</h3>
+                <input type="text" id="id" name="id" value="{{ id }}" class="form-input w-full editable-field {% if butedit != 'enabled' %}bg-gray-200 text-gray-400 cursor-not-allowed{% endif %}" {% if butedit != 'enabled' %}disabled{% endif %}/>
+            </div>
+            <div class="section-card">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Event Name</h3>
+                <input type="text" id="name" name="name" value="{{ name }}" class="form-input w-full editable-field {% if butedit != 'enabled' %}bg-gray-200 text-gray-400 cursor-not-allowed{% endif %}" {% if butedit != 'enabled' %}disabled{% endif %}/>
+            </div>
+            <div class="section-card">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Event Date</h3>
+                <input type="date" id="edate" name="edate" value="{{ edate }}" class="form-input w-full editable-field {% if butedit != 'enabled' %}bg-gray-200 text-gray-400 cursor-not-allowed{% endif %}" {% if butedit != 'enabled' %}disabled{% endif %}/>
+            </div>
+            <div class="section-card">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Venue_id</h3>
+                <input type="text" id="venue_id" name="venue_id" value="{{ venue_id }}" class="form-input w-full editable-field {% if butedit != 'enabled' %}bg-gray-200 text-gray-400 cursor-not-allowed{% endif %}" {% if butedit != 'enabled' %}disabled{% endif %}/>
+            </div>
+         </form>
+
+            <!-- Save / Cancel -->
+            <div class="flex flex-wrap gap-6 justify-center mt-8">
+                <button id="save" type="submit" form="form"
+                    class="btn btn-save text-lg font-bold px-6 py-3 hover:bg-blue-600 hover:scale-110 transition-all duration-300 {% if not butedit %}btn-disabled{% endif %}"
+                    {{butedit}}>
+                    💾 Save
+                </button>
+                <button id="cancel" type="button" onclick="window.location.href='/Events?option=cancel'"
+                    class="btn btn-warning text-lg font-bold px-6 py-3 hover:bg-yellow-500 hover:scale-110 transition-all duration-300 {% if not butedit %}btn-disabled{% endif %}"
+                    {{butedit}}>
+                    ❌ Cancel
+                </button>
+            </div>
+            
+
+
+
+        <!-- Navigation and Exit Buttons -->
+        <div class="flex flex-col items-center w-full mt-12">
+            <div class="flex flex-wrap gap-6 justify-center">
+                {% for btn in ['first', 'previous', 'next', 'last'] %}
+                <button type="button" onclick="window.location.href='/Events?option={{btn}}'"
+                    class="btn btn-secondary hover:bg-indigo-600 hover:scale-110 transition-all duration-300 {% if not butshow %}btn-disabled{% endif %}"
+                    {{butshow}}>
+                    {{ {'first':'⏮ First', 'previous':'◀ Previous', 'next':'▶ Next', 'last':'⏭ Last'}[btn] }}
+                </button>
+                {% endfor %}
+            </div>
+
+            <div class="w-full flex justify-end mt-6">
+                <button type="button" onclick="openModal('exit')"
+                    class="btn btn-exit {% if not butshow %}btn-disabled{% endif %}" {{ butshow }}>
+                    🚪 Exit
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-80 text-center space-y-4">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Are you sure?</h2>
+        <p id="modal-message" class="text-gray-600 dark:text-gray-300"></p>
+        <div class="flex justify-around mt-4">
+            <button onclick="confirmModalAction()" class="btn btn-danger w-24">Yes</button>
+            <button onclick="closeModal()" class="btn btn-secondary w-24">No</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let modalOption = '';
+    let isEditing = false;
+    let isInserting = false;
+
+    function openModal(action) {
+        modalOption = action;
+        const message = action === 'delete'
+            ? 'Do you really want to delete this item?'
+            : 'Are you sure you want to exit?';
+        document.getElementById('modal-message').textContent = message;
+        document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('modal').classList.add('hidden');
+        modalOption = '';
+    }
+
+    function confirmModalAction() {
+        if (modalOption) {
+            window.location.href = `/Events?option=${modalOption}`;
+        }
+    }
+</script>
+{% endblock %}

@@ -1,30 +1,195 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Flask demo PCII</title>
-    {% block title %}
-    {% endblock %}
-  </head>
-    <body>
-        <nav>
-            <ul class="menu">
-                {% if ulogin == None %}
-                    <li><a class="button" href="/login">Login</a></li>
-                {% else %}
-                    <li><a class="button" href="/logoff">Logoff</a></li>
-                    <li><a class="button" href="/Person">Person</a></li>
-                    <li><a class="button" href="/gform/Customer">Customer</a></li>
-                    <li><a class="button" href="/gform/Product">Product</a></li>
-                    <li><a class="button" href="/gform/CustomerOrder">Order</a></li>
-                    <li><a class="button" href="/subform/CustomerOrder_OrderProduct?option=''">Order lines</a></li>
-                    <li><a class="button" href="/Userlogin">Users</a></li>
-                    <li><a class="button" style="color:lightblue">User: {{ulogin}}</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    {% block content %}
-    {% endblock %}
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}g14_project{% endblock %}</title>
+  {% block head %}{% endblock %}
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon_site.png') }}">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || 
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <style>
+    .sidebar-transition {
+      transition: all 0.3s ease;
+      overflow-y: auto; /* Impede o overflow no sidebar */
+      overflow-x: hidden;  /* remove scroll horizontal */
+    }
+
+    html, body {
+      height: 100%;
+      overflow-x: hidden;  /* Impede a barra de rolagem horizontal */
+      overflow-y: auto;    /* Permite a barra de rolagem vertical */
+    }
+
+    * {
+      cursor: default;
+    }
+    input, textarea, select, button, [contenteditable="true"] {
+      cursor: text;
+    }
+    a, button {
+      cursor: pointer;
+    }
+
+    .sidebar-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.625rem 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .sidebar-btn:hover {
+      background-color: #60a5fa; /* azul hover */
+      color: white;
+    }
+
+    .sidebar-btn.active {
+      background-color: #3b82f6; /* azul mais escuro */
+      color: white;
+      font-weight: bold;
+      border: 2px solid #ffffff;
+    }
+
+    .flex-1 {
+      overflow: hidden; /* Garante que o conteúdo principal não tenha overflow */
+    }
+
+    footer {
+      overflow-x: hidden; /* Garante que não apareçam barras horizontais no footer */
+    }
+  </style>
+</head>
+
+<body class="flex min-h-screen overflow-hidden bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" 
+    class="group bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-100 w-16 hover:w-60 flex flex-col space-y-6 py-7 px-2 fixed inset-y-0 left-0 sidebar-transition z-50">
+
+    <div class="flex items-center space-x-2 px-4">
+      <span class="text-2xl font-bold opacity-0 group-hover:opacity-100 transition duration-300 whitespace-nowrap">Menu</span>
+    </div>
+
+    <nav class="flex-1 mt-6 space-y-2">
+      {% if ulogin is none %}
+        <a href="/login" class="sidebar-btn">
+          <span class="text-2xl">🔑</span>
+          <span class="sidebar-text opacity-0 group-hover:opacity-100 transition duration-300">Login</span>
+        </a>
+      {% else %}
+        <a href="/Events" class="sidebar-btn">
+          <span class="text-2xl">📅</span>
+          <span class="sidebar-text opacity-0 group-hover:opacity-100 transition duration-300">Events</span>
+        </a>
+        <a href="/gform/Attendees" class="sidebar-btn">
+          <span class="text-2xl">👥</span>
+          <span class="sidebar-text opacity-0 group-hover:opacity-100 transition duration-300">Attendees</span>
+        </a>
+        <a href="/gform/Venue" class="sidebar-btn">
+          <span class="text-2xl">📍</span>
+          <span class="sidebar-text opacity-0 group-hover:opacity-100 transition duration-300">Venue</span>
+        </a>
+        <a href="/gform/Registrations" class="sidebar-btn">
+          <span class="text-2xl">📝</span>
+          <span class="sidebar-text opacity-0 group-hover:opacity-100 transition duration-300">Registrations</span>
+        </a>
+        <a href="/subform/Events_Registrations?option=''" class="sidebar-btn">
+          <span class="text-2xl">📅👥</span>
+          <span class="sidebar-text opacity-0 group-hover:opacity-100 transition duration-300">Events_Attendees</span>
+        </a>
+        <a href="/Userlogin" class="sidebar-btn">
+          <span class="text-2xl">🧑‍💻</span>
+          <span class="sidebar-text opacity-0 group-hover:opacity-100 transition duration-300">Users</span>
+        </a>
+      {% endif %}
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <div class="flex-1 flex flex-col min-w-0 ml-16 group-hover:ml-60 transition-all duration-300">
+    <header class="flex items-center justify-between bg-white dark:bg-gray-800 p-4 shadow-md">
+      <h1 class="text-xl font-semibold">
+        {% set rotas_principais = ['/', '/logoff', '/chklogin'] %}
+        <a href="/">
+          {% if request.path in rotas_principais or request.args.get('option') == 'exit' %}
+            &#9650; Welcome to our app
+          {% else %}
+            ➤ Welcome to our app
+          {% endif %}
+        </a>
+    </h1>
+
+      {% if ulogin %}
+      <div class="flex items-center gap-4">
+        <div class="hidden sm:flex flex-col text-gray-600 dark:text-gray-300 text-sm font-medium leading-tight">
+          <span>User: <b>{{ ulogin }}</b></span>
+          <span class="text-xs mt-0.5">Group: <b>{{ group }}</b></span>
+        </div>
+        <a href="/logoff" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition hover:scale-105 shadow">
+          Logoff
+        </a>
+      </div>
+      {% endif %}
+    </header>
+
+    <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900 transition-all duration-300">
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    <footer class="group bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-800 dark:via-purple-800 dark:to-pink-800 text-white text-center py-6 text-sm shadow-inner rounded-t-lg transition-all duration-1000 ease-in-out overflow-hidden">
+    
+      <div class="flex flex-col items-center space-y-2">
+        <span class="font-semibold text-base">Projeto G14 &middot; L.EGI - FEUP</span>
+    
+        <!-- Conteúdo escondido que aparece com hover -->
+        <div class="max-h-0 opacity-0 group-hover:max-h-96 group-hover:opacity-100 transition-all duration-1000 ease-in-out overflow-hidden flex flex-col items-center space-y-2 mt-2">
+          <span class="text-xs">1º Ano, 2º Semestre &middot; PCII &middot; 2024/2025</span>
+    
+          <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2 w-full max-w-xs mx-auto">
+            <a href="https://sigarra.up.pt/feup/pt/fest_geral.cursos_list?pv_num_unico=202403532" target="_blank" class="bg-white/10 backdrop-blur-sm rounded-lg py-1 px-2 text-xs font-medium shadow hover:bg-white/20 transition">Carolina Martins</a>
+            <a href="https://sigarra.up.pt/feup/pt/fest_geral.cursos_list?pv_num_unico=202405349" target="_blank" class="bg-white/10 backdrop-blur-sm rounded-lg py-1 px-2 text-xs font-medium shadow hover:bg-white/20 transition">Gustavo Maia</a>
+            <a href="https://sigarra.up.pt/feup/pt/fest_geral.cursos_list?pv_num_unico=202405054" target="_blank" class="bg-white/10 backdrop-blur-sm rounded-lg py-1 px-2 text-xs font-medium shadow hover:bg-white/20 transition">Miguel Pinheiro</a>
+            <a href="https://sigarra.up.pt/feup/pt/fest_geral.cursos_list?pv_num_unico=202405970" target="_blank" class="bg-white/10 backdrop-blur-sm rounded-lg py-1 px-2 text-xs font-medium shadow hover:bg-white/20 transition">Rodrigo Braga</a>
+          </div>
+        </div>
+      </div>
+    
+    </footer>
+
+
+
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sidebarBtns = document.querySelectorAll('.sidebar-btn');
+      const currentPath = window.location.pathname;
+
+      sidebarBtns.forEach(btn => {
+        const href = btn.getAttribute('href');
+        if (href === currentPath) {
+          btn.classList.add('active');
+        }
+
+        btn.addEventListener('click', () => {
+          sidebarBtns.forEach(button => button.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    });
+  </script>
+
+</body>
 </html>

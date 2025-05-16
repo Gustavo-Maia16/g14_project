@@ -1,0 +1,43 @@
+Prepara o repositorio
+git config --global user.name "Antonio Brito"
+git config --global user.email "ascbrito@gmail.com"
+git config --global push.default matching
+git config --global alias.co checkout
+git init
+
+git add .
+git commit -am "Initial commit"
+
+cria ssh
+cd ~/
+mkdir .ssh
+cd .ssh
+ssh-keygen.exe
+
+cria os ficheiros
+id_rsa
+id_rsa.pub
+
+copia-se o conteúdo de id_rsa.pub
+no github
+settings -> ssh and
+cria-se nova ssh fazendo o paste
+
+criar um repositório no github
+copiar o conteudo local para o servidor
+git remote add origin git@github...
+git push -u origin master
+=========================================
+Create a new repository on command line
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:ascbrito/teste1.git
+git push -u origin main
+
+push an existing repository from the command line
+git remote add origin git@github.com:ascbrito/teste1.git
+git branch -M main
+git push -u origin main
+
