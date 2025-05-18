@@ -283,7 +283,7 @@
                       {% endif %}
                     {% endfor %}
                     <td>
-                      <button id="delrow" type="button" {{ butshow }} onclick="window.location.href = '/subform/{{ cname }}?option=delrow_{{ loop.index-1 }}" class="button1">-</button>
+                      <button id="delrow" type="button" {{butshow}} onclick="window.location.href = '/subform/{{cname}}?option=delrow_{{loop.index-1}}'" class="button1">-</button>
                     </td>
                 </tr>
                 {% endfor %}
