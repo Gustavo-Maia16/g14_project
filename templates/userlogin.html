@@ -1,51 +1,183 @@
 {% extends 'base.html' %}
+{% block page_title %}Userlogin{% endblock %}
+{% block head %}
+<title>{% block title %}Userlogin{% endblock %}</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon_site.png') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+<style>
+    .hover-disabled:hover {
+        background-color: #9ca3af !important;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    .btn-exit {
+        background-color: #facc15;
+        color: black;
+        transition: background-color 0.3s, transform 0.3s;
+    }
 
-{% block title %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+    .btn-exit:hover {
+        background-color: #eab308;
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+    
+    .editable-field:not([readonly]) {
+    border: 2px solid black;
+    border-radius: 8px;
+    padding: 0.5rem;
+    transition: border 0.3s, box-shadow 0.3s;
+    }
+    
+    .editable-field:not([readonly]):focus{
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+    }
+</style>
 {% endblock %}
 
-
 {% block content %}
+<div class="min-h-screen bg-gradient-to-br from-indigo-400 to-indigo-700 dark:from-gray-900 dark:to-gray-800 py-10 px-4 flex items-center justify-center transition-all duration-700">
+    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-2xl p-8 max-w-3xl w-full space-y-8 animate-fade-in">
+        
+        <div class="text-center space-y-4">
+            <img src="{{ url_for('static', filename='images/Userlogin.jpg')}}" alt="userlogin" class="mx-auto w-42 h-42 rounded-full shadow-lg hover:scale-105 transition-all duration-300">
+            <h1 class="text-4xl font-bold text-gray-800 dark:text-white">User Login</h1>
+            <p class="text-gray-500 dark:text-gray-400">Manage your account information easily.</p>
+        </div>
 
-    <div class="dados">
-        <br><br><br>
-        <img src="{{ url_for('static', filename='images/Userlogin.jpg')}}" alt="userlogin" width="200" height="200">
-        <h1>Userlogin</h1>
-        <br>
-        <button id="edit" type="button" {{butshow}} onclick="window.location.href = '/Userlogin?option=edit'" class="button1">Edit</button>
-        {% if group == "admin" %} 
-            <button id="delete" type="button" {{butshow}} onclick="window.location.href = '/Userlogin?option=delete'" class="button1">Delete</button>
-            <button id="insert" type="button" {{butshow}} onclick="window.location.href = '/Userlogin?option=insert'" class="button1">Insert</button>
-        {% endif %}
-        <button id="save" type="submit" form="form" {{butedit}} class="button1">Save</button>
-        <button id="cancel" type="button" {{butedit}} onclick="window.location.href = '/Userlogin?option=cancel'" class="button1">Cancel</button>
-        <button id="exit" type="button" {{butshow}} onclick="window.location.href = '/Userlogin?option=exit'" class="button1">Exit</button>
-        <br><br>
-        <form id="form" action="/Userlogin?option=save" method="post">
-         {% if group == "admin" %} 
-            <label for="user">User:</label>
-            <input type="text" {{butedit}} id="user" name="user" value="{{user}}" size="40"/>
-            <br><br>
-            <label for="usergroup">Group:</label>
-            <input type="text" {{butedit}} id="usergroup" name="usergroup" value="{{usergroup}}" size="40"/>
-        {% else %}
-            <label for="user">User:</label>
-            <input type="text" disabled id="user" name="user" value="{{user}}" size="40"/>
-            <br><br>
-            <label for="usergroup">Group:</label>
-            <input type="text" disabled id="usergroup" name="usergroup" value="{{usergroup}}" size="40"/>
-        {% endif %}        
-            <br><br>
-            <label for="password">Password:</label>
-            <input type="password" {{butedit}} id="password" name="password" size="40"/>
+        <!-- Actions Buttons (Edit, Delete, Insert) -->
+        <div class="flex flex-wrap gap-6 justify-center mt-8">
+            <button type="button" onclick="window.location.href='/Userlogin?option=edit'"
+                class="btn btn-primary text-lg font-bold px-6 py-3 hover:bg-indigo-600 hover:scale-110 transition-all duration-300 {% if not butshow %}btn-disabled{% endif %}"
+                {{butshow}}>
+                ✏️ Edit
+            </button>
+            {% if group == "admin" %}
+            <button type="button" onclick="openModal('delete')"
+                class="btn btn-danger text-lg font-bold px-6 py-3 hover:bg-red-600 hover:scale-110 transition-all duration-300 {% if not butshow %}btn-disabled{% endif %}"
+                {{butshow}}>
+                🗑️ Delete
+            </button>
+            <button type="button" onclick="window.location.href='/Userlogin?option=insert'"
+                class="btn btn-success text-lg font-bold px-6 py-3 hover:bg-green-600 hover:scale-110 transition-all duration-300 {% if not butshow %}btn-disabled{% endif %}"
+                {{butshow}}>
+                ➕ Insert
+            </button>
+            {% endif %}
+        </div>
+
+        <!-- Form Section -->
+        <form id="form" action="/Userlogin?option=save" method="post" class="space-y-6 mt-8">
+            <div class="section card">
+                <div>
+                    <label for="user" class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">User:</label>
+                    <input type="text" id="user" name="user" value="{{user}}" class="form-input w-full editable-field {% if butedit != 'enabled' %}bg-gray-200 text-gray-400 cursor-not-allowed{% endif %}" {% if butedit != 'enabled' %}disabled{% endif %}
+                        {% if not butedit or key == 'id' %}disabled{% endif %} />
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="usergroup" class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Group:</label>
+                    <input type="text" id="usergroup" name="usergroup" value="{{usergroup}}" class="form-input w-full editable-field {% if butedit != 'enabled' %}bg-gray-200 text-gray-400 cursor-not-allowed{% endif %}" {% if butedit != 'enabled' %}disabled{% endif %}
+                        {% if not butedit or key == 'id' %}disabled{% endif %}/>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="password" class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Password:</label>
+                    <input type="password" id="password" name="password" class="form-input w-full editable-field {% if butedit != 'enabled' %}bg-gray-200 text-gray-400 cursor-not-allowed{% endif %}" {% if butedit != 'enabled' %}disabled{% endif %}
+                        {% if not butedit or key == 'id' %}disabled{% endif %}/>
+                </div>
+            </div>
+
+            <!-- Save and Cancel Buttons -->
+            <div class="flex flex-wrap gap-6 justify-center mt-8">
+                <button id="save" type="submit" form="form"
+                    class="btn btn-save text-lg font-bold px-6 py-3 hover:bg-blue-600 hover:scale-110 transition-all duration-300 {% if not butedit %}btn-disabled{% endif %}"
+                    {{butedit}}>
+                    💾 Save
+                </button>
+                <button id="cancel" type="button" onclick="window.location.href='/Userlogin?option=cancel'"
+                    class="btn btn-warning text-lg font-bold px-6 py-3 hover:bg-yellow-500 hover:scale-110 transition-all duration-300 {% if not butedit %}btn-disabled{% endif %}"
+                    {{butedit}}>
+                    ❌ Cancel
+                </button>
+            </div>
         </form>
-        <br>
-        {% if group == "admin" %} 
-            <button id="first" type="button" {{butshow}} onclick="window.location.href = '/Userlogin?option=first'" class="button1">First</button>
-            <button id="previous" type="button" {{butshow}} onclick="window.location.href = '/Userlogin?option=previous'" class="button1">Previous</button>
-            <button id="next" type="button" {{butshow}} onclick="window.location.href = '/Userlogin?option=next'" class="button1">Next</button>
-            <button id="last" type="button" {{butshow}} onclick="window.location.href = '/Userlogin?option=last'" class="button1">Last</button>
+
+        <!-- Navigation and Exit Buttons -->
+        <div class="flex flex-col items-center w-full mt-12">
+            <div class="flex flex-wrap gap-6 justify-center">
+                {% for nav in ['first', 'previous', 'next', 'last'] %}
+                <button type="button" onclick="window.location.href='/Userlogin?option={{nav}}'"
+                    class="btn btn-secondary hover:bg-indigo-600 hover:scale-110 transition-all duration-300 {% if not butshow %}btn-disabled{% endif %}"
+                    {{butshow}}>
+                    {{ {'first':'⏮ First', 'previous':'◀ Previous', 'next':'▶ Next', 'last':'⏭ Last'}[nav] }}
+                </button>
+                {% endfor %}
+            </div>
+
+            <div class="w-full flex justify-end mt-6">
+                <button type="button" onclick="openModal('exit')"
+                    class="btn btn-exit {% if not butshow %}btn-disabled{% endif %}" {{ butshow }}>
+                    🚪 Exit
+                </button>
+            </div>
+        </div>
+
+        {% if msg %}
+        <p class="text-center text-red-500 mt-6">{{ msg }}</p>
         {% endif %}
     </div>
+</div>
 
+<!-- Modal -->
+<div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-80 text-center space-y-4">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Are you sure?</h2>
+        <p id="modal-message" class="text-gray-600 dark:text-gray-300"></p>
+        <div class="flex justify-around mt-4">
+            <button onclick="confirmModalAction()" class="btn btn-danger w-24">Yes</button>
+            <button onclick="closeModal()" class="btn btn-secondary w-24">No</button>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script>
+    let modalOption = '';
+
+    function openModal(action) {
+        modalOption = action;
+        const message = action === 'delete'
+            ? 'Do you really want to delete this user?'
+            : 'Are you sure you want to exit?';
+        document.getElementById('modal-message').textContent = message;
+        document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('modal').classList.add('hidden');
+        modalOption = '';
+    }
+
+    function confirmModalAction() {
+        if (modalOption) {
+            window.location.href = `/Userlogin?option=${modalOption}`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const editableFields = document.querySelectorAll('.editable-field');
+        const saveBtn = document.getElementById('save');
+        const cancelBtn = document.getElementById('cancel');
+
+        editableFields.forEach(field => {
+            field.addEventListener('input', () => {
+                saveBtn.disabled = false;
+                cancelBtn.disabled = false;
+                saveBtn.classList.remove('btn-disabled', 'hover-disabled');
+                cancelBtn.classList.remove('btn-disabled', 'hover-disabled');
+            });
+        });
+    });
+</script>
 {% endblock %}
