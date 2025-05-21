@@ -9,14 +9,7 @@ from subs.apps_events import apps_events
 from subs.apps_gform import apps_gform 
 from subs.apps_subform import apps_subform 
 from subs.apps_userlogin import apps_userlogin
-<<<<<<< HEAD
 from subs.apps_plotly import apps_plotly
-=======
-<<<<<<< HEAD
-from subs.apps_plotly import apps_plotly
-=======
->>>>>>> ebc8b36591f58886e2b04e959022f670f77baa67
->>>>>>> 30f7ebb779f679d3bbf4ca1c9d0ee01009b930da
 
 app = Flask(__name__)
 
@@ -59,22 +52,10 @@ def subform(cname):
 @app.route("/Userlogin", methods=["post","get"])
 def userlogin():
     return apps_userlogin()
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 30f7ebb779f679d3bbf4ca1c9d0ee01009b930da
 @app.route('/plotly', methods=["post","get"])
 def plotly():
     return apps_plotly()
 if __name__ == '__main__':
     app.run()
-<<<<<<< HEAD
-=======
-=======
-if __name__ == '__main__':
-    app.run()
-
->>>>>>> ebc8b36591f58886e2b04e959022f670f77baa67
->>>>>>> 30f7ebb779f679d3bbf4ca1c9d0ee01009b930da
     
     
