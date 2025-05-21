@@ -4,15 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-<<<<<<< HEAD
 recent_files = ['classes\\userlogin.py', 'subs\\apps_gform.py', 'subs\\apps_events.py', 'subs\\apps_subform.py', 'subs\\apps_userlogin.py', 'app.py', 'classes\\events.py', 'templates\\gform.html', 'templates\\index.html', 'templates\\base.html', 'classes\\gclass.py', 'templates\\login.html', 'templates\\subform.html', 'templates\\userlogin.html', 'classes\\registrations.py', 'classes\\attendees.py', 'classes\\venue.py', 'templates\\events.html', 'static\\css\\main1.css', 'static\\css\\main.css', '.gitignore', 'Testes das classes.py', 'data\\pandas.ipynb', 'datafile.py', 'templates\\plotly.html', 'subs\\apps_plotly.py', 'subs\\apps_plotly1.py']
-=======
-<<<<<<< HEAD
-recent_files = ['classes\\userlogin.py', 'subs\\apps_gform.py', 'subs\\apps_events.py', 'subs\\apps_subform.py', 'subs\\apps_userlogin.py', 'app.py', 'classes\\events.py', 'templates\\gform.html', 'templates\\index.html', 'templates\\base.html', 'classes\\gclass.py', 'templates\\login.html', 'templates\\subform.html', 'templates\\userlogin.html', 'classes\\registrations.py', 'classes\\attendees.py', 'classes\\venue.py', 'templates\\events.html', 'static\\css\\main1.css', 'static\\css\\main.css', '.gitignore', 'Testes das classes.py', 'data\\pandas.ipynb', 'datafile.py', 'templates\\plotly.html', 'subs\\apps_plotly.py']
-=======
-recent_files = ['classes\\userlogin.py', 'subs\\apps_gform.py', 'subs\\apps_events.py', 'subs\\apps_subform.py', 'subs\\apps_userlogin.py', 'app.py', 'classes\\events.py', 'templates\\gform.html', 'templates\\index.html', 'templates\\base.html', 'classes\\gclass.py', 'templates\\login.html', 'templates\\subform.html', 'templates\\userlogin.html', 'classes\\registrations.py', 'classes\\attendees.py', 'classes\\venue.py', 'templates\\events.html', 'static\\css\\main1.css', 'static\\css\\main.css', '.gitignore', 'Testes das classes.py', 'data\\pandas.ipynb', 'datafile.py']
->>>>>>> ebc8b36591f58886e2b04e959022f670f77baa67
->>>>>>> 30f7ebb779f679d3bbf4ca1c9d0ee01009b930da
 
 [main]
 version = 0.2.0

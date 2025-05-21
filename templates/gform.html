@@ -146,14 +146,7 @@
                 <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">{{ des[loop.index0] }}</h3>
                 {% if types[key] == 'date' %}
                 <input type="date" id="{{ key }}" name="{{ key }}" value="{{ obj[key].strftime('%Y-%m-%d') }}"
-<<<<<<< HEAD
 "
-=======
-<<<<<<< HEAD
-"
-=======
->>>>>>> ebc8b36591f58886e2b04e959022f670f77baa67
->>>>>>> 30f7ebb779f679d3bbf4ca1c9d0ee01009b930da
                     class="form-input w-full editable-field {% if butedit != 'enabled' %}bg-gray-200 text-gray-400 cursor-not-allowed{% endif %}" {% if butedit != 'enabled' %}disabled{% endif %}/>
                 
                 {% else %}
