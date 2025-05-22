@@ -20,7 +20,7 @@ def apps_userlogin():
             butedit = "enabled"
         elif option == "delete":
             obj = Userlogin.current()
-            Userlogin.remove(obj.user)
+            Userlogin.remove(obj.id)
             if not Userlogin.previous():
                 Userlogin.first()
         elif option == "insert":
@@ -29,9 +29,9 @@ def apps_userlogin():
         elif option == 'cancel':
             pass
         elif prev_option == 'insert' and option == 'save':
-            obj = Userlogin(request.form["user"],request.form["usergroup"], \
+            obj = Userlogin(0,request.form["user"],request.form["usergroup"], \
                             Userlogin.set_password(request.form["password"]))
-            Userlogin.insert(obj.user)
+            Userlogin.insert(obj.id)
             Userlogin.last()
         elif prev_option == 'edit' and option == 'save':
             obj = Userlogin.current()
@@ -40,7 +40,7 @@ def apps_userlogin():
             if request.form["password"] != "":
                 obj.password = Userlogin.set_password(request.form["password"])
                 print(obj.password)
-            Userlogin.update(obj.user)
+            Userlogin.update(obj.id)
         elif option == "first":
             Userlogin.first()
         elif option == "previous":
