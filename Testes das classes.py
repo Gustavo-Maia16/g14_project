@@ -5,31 +5,36 @@
 #objective: Test classes based on generic class Gclass
 
 """""
-db = 'business.db'
 
 #Uncomment to test class Events (select next 4 lines and press ctrl-1)
+from classes.venue import Venue
+Venue.read('data/gestao_eventos.db')
 from classes.events import Events
 test_class = Events
-ob = '498;final;2025-02-06'
+ob = '498;final;2025-02-06;19'
 db = 'gestao_eventos.db'
 
 #Uncomment to test class Venue (select next 4 lines and press ctrl-1)
 # from classes.venue import Venue
 # test_class = Venue
-# ob = '498;final;balao;2'
-# db = 'venue.db'
+# ob = '19;Jackson Ltd;Carriechester;544'
+# db = 'gestao_eventos.db'
 
 #Uncomment to test class Attendees (select next 4 lines and press ctrl-1)
 # from classes.attendees import Attendees
 # test_class = Attendees
-# ob = 'balao;alfksigsdjgd@eksfs.cod'
-# db = 'attendees.db'
+# ob = '639;Veronica Herman;dianavillanueva@example.com'
+# db = 'gestao_eventos.db'
 
 #Uncomment to test class Registrations (select next 4 lines and press ctrl-1)
+# from classes.events import Events
+# Events.read('data/gestao_eventos.db')
+# from classes.attendees import Attendees
+# Attendees.read('data/gestao_eventos.db')
 # from classes.registrations import Registrations
 # test_class = Registrations
-# ob = '1;2000-01-01;t;normal'
-# db = 'registrations.db'
+# ob = '1;498;639;2025-01-14;Regular;p'
+# db = 'gestao_eventos.db'
 
 
 

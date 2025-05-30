@@ -23,22 +23,23 @@ class Registrations(Gclass):
         super().__init__()
         events_id = int(events_id)
         attendees_id = int(attendees_id)
-        if  events_id in Events.lst:
-            if attendees_id in Attendees.lst:       
-                id = Registrations.get_id(id)  # Gera um ID automaticamente
-                self._id = id 
-                self._events_id = events_id
-                self._attendees_id = attendees_id
-                self._date = datetime.date.fromisoformat(date) #if isinstance(date, str) else date
-                self._ticket_type = ticket_type
-                self._seat = seat
-                
-            else:
-                print('Attendees ', attendees_id, ' not found')
-        else:
+    
+        if events_id not in Events.lst:
             print('Events ', events_id, ' not found')
-
-        # Armazena no dicionário de objetos
+            return
+    
+        if attendees_id not in Attendees.lst:
+            print('Attendees ', attendees_id, ' not found')
+            return
+    
+        id = Registrations.get_id(id)
+        self._id = id 
+        self._events_id = events_id
+        self._attendees_id = attendees_id
+        self._date = datetime.date.fromisoformat(date)
+        self._ticket_type = ticket_type
+        self._seat = seat
+    
         Registrations.obj[id] = self
         Registrations.lst.append(id)
 
